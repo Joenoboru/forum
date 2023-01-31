@@ -5,7 +5,7 @@ services:
     working_dir: /app
     volumes:
       - .:/app
-    command: go run .
+    command: go run . -env docker
     ports:
       - "8080:8080"
     depends_on:

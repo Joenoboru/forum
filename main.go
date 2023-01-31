@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"forum/model"
 	"net/http"
@@ -17,10 +18,15 @@ import (
 var db *gorm.DB
 
 func init() {
-	// 設定資料庫連線
-	var err error
-
-	enverr := godotenv.Load()
+	envSetting := flag.String("env", ".env", "environment setting")
+	flag.Parse()
+	var envFile string
+	if *envSetting == "docker" {
+		envFile = ".env.docker"
+	} else {
+		envFile = ".env"
+	}
+	enverr := godotenv.Load(envFile)
 	if enverr != nil {
 		panic("Error loading .env file")
 	}
@@ -30,6 +36,7 @@ func init() {
 	Database := os.Getenv("DB_NAME")
 	Port := os.Getenv("DB_PORT")
 	//組合sql連線字串
+	var err error
 	addr := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", UserName, Password, Host, Port, Database)
 	db, err = gorm.Open(mysql.Open(addr), &gorm.Config{})
 	if err != nil {
