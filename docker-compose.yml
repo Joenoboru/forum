@@ -9,17 +9,24 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - db
+        db:
+            condition: service_healthy ##確定db已經ready後才啟動app,以免造成app啟動但db尚未ready的情況
   db:
+    container_name: db
     image: mysql:5.7
+    #platform: linux/amd64  #如果是mac M1 要加入這行
     environment:
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: gouser
       MYSQL_PASSWORD: gouser
-      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: goDB
     ports:
       - "3306:3306"
-    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+    command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci'] ##資料欄位可以存中文
+    healthcheck:
+        test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+        timeout: 20s
+        retries: 3
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: phpmyadmin
@@ -31,3 +38,6 @@ services:
     - PMA_PASSWORD=root
     ports:
     - 8081:80
+    depends_on:
+        db:
+            condition: service_healthy
