@@ -103,6 +103,8 @@ func AuthMiddleware() gin.HandlerFunc {
 			c.Set("userId", claims["userId"])
 		} else {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid JWT"})
+			c.Abort()
+			return
 		}
 
 		c.Next()
