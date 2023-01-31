@@ -6,6 +6,8 @@ import (
 
 type Topic struct {
 	ID        uint      `json:"id" gorm:"primary_key"`
+	UserID    uint      `json:"user_id" gorm:"column:userId"`
+	User      User      `gorm:"column:userId`
 	Title     string    `json:"title" gorm:"size:256;default:" validate:"max=256"`
 	Content   string    `json:"content"`
 	CreatedAt time.Time `gorm:"type:datetime;default:CURRENT_TIMESTAMP();column:createdAt"`
@@ -14,6 +16,8 @@ type Topic struct {
 
 type Message struct {
 	ID        uint      `json:"id" gorm:"primary_key"`
+	UserID    uint      `json:"user_id" gorm:"column:userId"`
+	User      User      `gorm:"column:userId`
 	TopicID   uint      `json:"topic_id" gorm:"column:topicId"`
 	Topic     Topic     `gorm:"column:topicId`
 	Content   string    `json:"content"`
