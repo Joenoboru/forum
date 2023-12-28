@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
@@ -51,6 +52,7 @@ func init() {
 func main() {
 	r := gin.Default()
 	r.Use(ErrorMiddleware())
+	r.Use(cors.Default()) //使用 POST 方法時會有預先驗證的請求，這個請求被稱為 CORS（跨來源資源共用）預先驗證請求。可以配置服務器以回應預先驗證請求，並使用適當的 Access-Control-Allow-Origin 頭。此頭告訴瀏覽器哪些源是允許向 API 發送請求的。
 
 	// 為特定路由群組設定中間件檢查token
 	auth := r.Group("", AuthMiddleware())
